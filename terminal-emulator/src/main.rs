@@ -32,9 +32,12 @@ fn main() {
                     child_command.wait();
                 }
             }
+            "exit" => return,
             command => {
-                let mut child_command = Command::new(command).args(args).spawn().unwrap();
-                child_command.wait();  
+                match Command::new(command).args(args).spawn() {
+                    Ok(mut child) => { let _ = child.wait(); }
+                    Err(err) => eprintln!("{}: {}", command, err),
+                }
             }
         }
 
