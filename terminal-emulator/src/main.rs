@@ -22,6 +22,11 @@ fn main() {
                     eprintln!("cd: {}: {}", new_path, err);
                 }
             }
+            "git commit -m" => {
+                let message = input.split("git commit -m ").nth(1).unwrap();
+                let mut child_command = Command::new("git").args(["commit", "-m", message]).spawn().unwrap();
+                child_command.wait();
+            }
             command => {
                 let mut child_command = Command::new(command).args(args).spawn().unwrap();
                 child_command.wait();  
