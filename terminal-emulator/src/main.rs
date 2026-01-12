@@ -1,5 +1,6 @@
 use std::io::{stdin, stdout, Write};
 use std::process::Command;
+use std::path::Path;
 
 fn main() {
     loop {
@@ -11,9 +12,23 @@ fn main() {
         //args are just going to be the words after the first word which is the command
         let mut parts = input.trim().split_whitespace();
         let command = parts.next().unwrap();
-        let args = parts;
-        let mut child_command = Command::new(command).args(args).spawn().unwrap();
-        child_command.wait();
+        let mut args = parts;
+
+        match command {
+            "cd" => {
+                let new_path = args.next().unwrap_or("~");
+                let root = Path::new(new_path);
+                if let Err(err) = std::env::set_current_dir(root) {
+                    eprintln!("cd: {}: {}", new_path, err);
+                }
+            }
+            command => {
+                let mut child_command = Command::new(command).args(args).spawn().unwrap();
+                child_command.wait();  
+            }
+        }
+
+       
     }
 
 
