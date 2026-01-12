@@ -30,7 +30,7 @@ fn main() {
                     if input.starts_with("git commit -m ") {
                         let message = input.split("git commit -m ").nth(1).unwrap();
                         let mut child_command = Command::new("git").args(["commit", "-m", message]).spawn().unwrap();
-                        child_command.wait();
+                        let _ = child_command.wait();
                     } else {
                         let mut child_command = Command::new("git").args(args).spawn().unwrap();
                         let _ = child_command.wait();
